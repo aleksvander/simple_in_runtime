@@ -1,0 +1,92 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/library.xhtml"
+>
+
+
+    <ui:define name="content">
+
+        <div class="authorization-div">
+        </div>
+
+        <h:form id="booksForm">
+
+            <p:dataTable id="booksList" var="book" value="#{libraryFacade.books}" editable="true" editMode="cell" lazy="true" paginator="true">
+
+                <p:ajax event="cellEdit" listener="#{bookView.updateBookByOnCellEdit}" update=":booksForm:booksList"/>
+
+                <p:column headerText="Title" sortBy="#{book.name}">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{book.name}"/></f:facet>
+                        <f:facet name="input"><p:inputText id="name" value="#{book.name}" style="width:96%"/></f:facet>
+                    </p:cellEditor>
+                    <!--<h:outputText value="#{book.name}"/>-->
+                </p:column>
+                <p:column headerText="Description" sortBy="#{book.description}">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{book.description}"/></f:facet>
+                        <f:facet name="input"><p:inputText id="description" value="#{book.description}"
+                                                           style="width:96%"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Count pages" sortBy="#{book.page_count}">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{book.page_count}"/></f:facet>
+                        <f:facet name="input"><p:inputText id="page_count" value="#{book.page_count}"
+                                                           style="width:96%"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Genre" sortBy="#{book.genre.name}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{book.genre.name}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:selectOneMenu value="#{book.genre.id}" style="width:100%">
+                                <f:selectItems value="#{genreDaoImpl.genres}" var="gen_sel" itemLabel="#{gen_sel.name}"
+                                               itemValue="#{gen_sel.id}"/>
+                                <!--<p:ajax partialSubmit="true" process="@this" async="true" update="@parent"/>-->
+                            </p:selectOneMenu>
+                        </f:facet>
+
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Author" sortBy="#{book.author.name}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{book.author.name}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:selectOneMenu value="#{book.author.id}" style="width:100%">
+                                <f:selectItems value="#{authorDaoImpl.authors}" var="auth_sel" itemLabel="#{auth_sel.name}"
+                                               itemValue="#{auth_sel.id}"/>
+                                <!--<p:ajax partialSubmit="true" process="@this" async="true" update="@parent"/>-->
+                            </p:selectOneMenu>
+                        </f:facet>
+
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="tools: delete">
+                    <p:commandButton value="Remove it" actionListener="#{libraryFacade.removeBook(book)}"
+                                     update=":booksForm:booksList :booksCount" icon="ui-icon-check"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="book_count">
+        <div class="count_custom">
+            <h3 style="text-align: right"><p:outputLabel id="booksCount"
+                                                         value="Count books: #{libraryFacade.books.size()}"/></h3>
+        </div>
+    </ui:define>
+
+</ui:composition>

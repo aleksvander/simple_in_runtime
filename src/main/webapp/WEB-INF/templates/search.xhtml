@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Search template:</title>
+</h:head>
+<h:body>
+
+    <f:facet name="resources">
+        <h:outputScript library="js" name="search.js" target="head"/>
+    </f:facet>
+
+
+    <ui:composition>
+        <div class="search">
+
+
+            <h:form>
+                <h:panelGrid columns="4" cellpadding="5">
+                    <h:outputLabel for="name" value="Name:" style="font-weight:bold" />
+                    <p:inputText id="name" value="#{searchCriteria.text}" />
+
+                    <p:selectOneMenu id="country" value="#{search.selectedSearchType}" style="width:150px">
+                        <p:ajax listener="#{search.selectedSearchType}" />
+                        <!--update=":booksForm:booksList :booksCount"-->
+                        <f:selectItem itemLabel="Sarch by" itemValue="#{search.selectedSearchType}" noSelectionOption="true" />
+                        <f:selectItems value="#{search.searchTypes}" />
+                    </p:selectOneMenu>
+
+                    <p:commandButton value="Search" action="searchByText" update=":booksForm:booksList :booksCount"  icon="ui-icon-check" />
+                    <!--<h:outputText id="display" value="#{searchCriteria.text}" />-->
+                </h:panelGrid>
+            </h:form>
+        </div>
+    </ui:composition>
+
+</h:body>
+</html>
+
